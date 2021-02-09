@@ -6,6 +6,10 @@ import glob
 import random
 import os
 
+cam = cv2.VideoCapture(0) #0=front-cam, 1=back-cam
+cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1300)
+cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1500)
+
 # Load Yolo
 net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_testing.cfg")
 
@@ -16,19 +20,18 @@ classes = ["fish"]
 cwd_0 = os.getcwd()
 img_folder_path = os.path.join(cwd_0, 'test_images')
 print(img_folder_path)
-images_path = glob.glob(r"{}/*.jpg".format(img_folder_path))
+# images_path = glob.glob(r"{}/*.jpg".format(img_folder_path))
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
-# Insert here the path of your images
-random.shuffle(images_path)
-# loop through all the images
-for img_path in images_path:
-    print(img_path)
-    # Loading image
-    img = cv2.imread(img_path)
-    img = cv2.resize(img, None, fx=0.4, fy=0.4)
+# imagen = cv2.imread('/home/alejo/Documents/Piscicultura/fish_counting/test_images/A000001_R_00000010.jpg')
+
+
+
+def detect_fish(imagen):
+    colors = np.random.uniform(0, 255, size=(len(classes), 3))
+    img = imagen
+    # img = cv2.resize(imagen, None, fx=0.4, fy=0.4)
     height, width, channels = img.shape
 
     # Detecting objects
@@ -50,7 +53,7 @@ for img_path in images_path:
             if confidence > 0.3:
                 # Object detected
                 peces += 1
-                #print(class_id)
+                
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
                 w = int(detection[2] * width)
@@ -74,10 +77,22 @@ for img_path in images_path:
             label = str(classes[class_ids[i]])
             color = colors[class_ids[i]]
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
+            cv2.putText(img, label, (x, y + 30), font, 2, color, 2)
+
+    return img
 
 
-    cv2.imshow("Image", img)
-    key = cv2.waitKey(0)
+while True:
+    ## read frames
+    ret, imagen = cam.read()
+    ## Fish Detection
+    boxed_image = detect_fish(imagen)
+    cv2.imshow('', boxed_image)
+    ## press q or Esc to quit    
+    if (cv2.waitKey(1) & 0xFF == ord("q")) or (cv2.waitKey(1)==27):
+        break
 
+cam.release()
 cv2.destroyAllWindows()
+
+# detect_fish(imagen)
