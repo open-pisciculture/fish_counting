@@ -11,7 +11,8 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1300)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1500)
 
 # Load Yolo
-net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_testing.cfg")
+net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_20000.weights", "config/yolov4-tiny_testing.cfg")
+# net = cv2.dnn.readNet("yolo_weights/yolov3_training_last.weights", "config/yolov3_testing.cfg")
 
 # Name custom object
 classes = ["fish"]
