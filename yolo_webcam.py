@@ -6,7 +6,7 @@ import glob
 import random
 import os
 
-cam = cv2.VideoCapture(0) #0=front-cam, 1=back-cam
+cam = cv2.VideoCapture(-1) #0=front-cam, 1=back-cam
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1300)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1500)
 

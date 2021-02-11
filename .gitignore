@@ -1,5 +1,5 @@
 # Ignore folder with weights
-yolo_weights/
+# yolo_weights/
 
 # Ignore weights
 *.weights
