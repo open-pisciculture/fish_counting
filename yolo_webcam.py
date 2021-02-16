@@ -12,7 +12,7 @@ cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1500)
 CV_LOAD_IMAGE_GRAYSCALE = 0
 
 # Load Yolo
-net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw3_last.weights", "config/yolov4-tiny_testing.cfg")
+net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw1_last.weights", "config/yolov4-tiny_testing.cfg")
 # net = cv2.dnn.readNet("yolo_weights/yolov3_training_last.weights", "config/yolov3_testing.cfg")
 
 # Name custom object
@@ -29,17 +29,28 @@ output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 def detect_fish(imagen):
     colors = np.random.uniform(0, 255, size=(len(classes)))
-    img = imagen
-    # img = cv2.resize(imagen, None, fx=0.4, fy=0.4)
+
+    # # 3 Channels
+    # img = imagen
+    # color_imagen = imagen
+
+    # # B&W
+    img = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+    color_img = imagen
     print(img.shape)
-    height, width, channels = img.shape
+
+    # # 3 Channels
+    # height, width, channels = img.shape
+
+    # # B&W
+    height, width = img.shape
+    channels = 1
 
     # Detecting objects
     blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
 
     net.setInput(blob)
     outs = net.forward(output_layers)
-    peces = 0
 
     # Showing informations on the screen
     class_ids = []
@@ -52,9 +63,6 @@ def detect_fish(imagen):
             confidence = scores[class_id]
             if confidence > 0.3:
                 # Object detected
-                print('####### DETECTION #######')
-                print(detection, '\n')
-                peces += 1
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
                 w = int(detection[2] * width)
@@ -67,7 +75,7 @@ def detect_fish(imagen):
                 boxes.append([x, y, w, h])
                 confidences.append(float(confidence))
                 class_ids.append(class_id)
-    print('Hay {} peces'.format(peces))
+    print('Hay {} peces'.format(len(boxes)))
 
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
     #print(indexes)
@@ -77,10 +85,10 @@ def detect_fish(imagen):
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]])
             color = colors[class_ids[i]]
-            cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(img, label, (x, y + 30), font, 2, color, 2)
+            cv2.rectangle(color_img, (x, y), (x + w, y + h), color, 2)
+            cv2.putText(color_img, label, (x, y + 30), font, 2, color, 2)
 
-    return img
+    return color_img
 
 
 while True:
@@ -89,7 +97,6 @@ while True:
     # print(img_path)
 
     # imagen = cv2.imread(img_path, CV_LOAD_IMAGE_GRAYSCALE) # Test with image in directory test_images/
-    # imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
 
     ## Fish Detection
     boxed_image = detect_fish(imagen)
