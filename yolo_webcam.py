@@ -12,7 +12,7 @@ cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1500)
 CV_LOAD_IMAGE_GRAYSCALE = 0
 
 # Load Yolo
-net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw1_last.weights", "config/yolov4-tiny_testing.cfg")
+net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw1_last.weights", "config/yolov4-tiny_testing_bw1.cfg")
 # net = cv2.dnn.readNet("yolo_weights/yolov3_training_last.weights", "config/yolov3_testing.cfg")
 
 # Name custom object
