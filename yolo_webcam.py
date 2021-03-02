@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import glob
 import random
+import time
 import os
 
 cam = cv2.VideoCapture(-1) #0=front-cam, 1=back-cam
@@ -21,6 +22,9 @@ ch_num = 1
 if ch_num == 3:
     # # # 3 channels # #
     # net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw1_last.weights", "config/yolov4-tiny_testing_3chan.cfg")
+
+    # # # 3 Channels for YoloV3 # #
+    # net = cv2.dnn.readNet("yolo_weights/yolov3_training_last.weights", "config/yolov3_testing.cfg")
 
     # # 3 Channels With no pretrained weights # #
     net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_3ch_no_pretraining.weights", "config/yolov4-tiny_testing_3chan.cfg")
@@ -108,8 +112,8 @@ def detect_fish(imagen):
             cv2.rectangle(color_img, (x, y), (x + w, y + h), color, 2)
             cv2.putText(color_img, label, (x, y + 30), font, 2, color, 2)
     
-    print('Hay {} peces'.format(num_peces))
-    cv2.putText(color_img, 'Count:'+str(num_peces), (30, 30), font, 1, (255,0,0), 2)
+    # print('Hay {} peces'.format(num_peces))
+    cv2.putText(color_img, 'Count:'+str(num_peces), (30, 30), font, 1, (255,255,255), 2)
 
     return color_img
 
@@ -119,9 +123,11 @@ while True:
 
     ## read frames
     ret, imagen = cam.read()
-
+    t0 = time.time()
     ## Fish Detection
     boxed_image = detect_fish(imagen)
+    t1 = time.time()
+    cv2.putText(boxed_image, 'FPS:'+str(int(1/(t1-t0))), (100, 30), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 2)
     cv2.imshow('Yolo in action', boxed_image)
     ## press q or Esc to quit
     if (cv2.waitKey(1) & 0xFF == ord("q")) or (cv2.waitKey(1)==27):
