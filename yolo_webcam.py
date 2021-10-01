@@ -15,14 +15,14 @@ CV_LOAD_IMAGE_GRAYSCALE = 0
 # Load Yolo
 
 # Number of channels, set to 3 for color images
-ch_num = 1
+ch_num = 3
 
 if ch_num == 3:
     # # 3 channels # #
-    net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw1_last.weights", "config/yolov4-tiny_testing_3chan.cfg")
+    net = cv2.dnn.readNet("yolo_weights/yolov4-tiny-detector_best_pisciculturedb.weights", "config/yolov4-tiny_testing_3chan.cfg")
 
     # # # 3 Channels for YoloV3 # #
-    # net = cv2.dnn.readNet("yolo_weights/yolov3_training_last.weights", "config/yolov3_testing.cfg")
+    # net = cv2.dnn.readNet("yolo_weights/yolov3_training_last_pisciculturedb.weights", "config/yolov3_testing.cfg")
 
     # # # 3 Channels With no pretrained weights # #
     # net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_3ch_no_pretraining.weights", "config/yolov4-tiny_testing_3chan.cfg")
