@@ -17,8 +17,6 @@ CV_LOAD_IMAGE_GRAYSCALE = 0
 # Number of channels, set to 3 for color images
 ch_num = 1
 
-
-
 if ch_num == 3:
     # # 3 channels # #
     net = cv2.dnn.readNet("yolo_weights/yolov4-tiny_training_bw1_last.weights", "config/yolov4-tiny_testing_3chan.cfg")
